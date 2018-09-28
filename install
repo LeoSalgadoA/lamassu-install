@@ -66,6 +66,7 @@ fi
 
 # So we don't run out of memory
 decho "Enabling swap file for install only..."
+swapoff -a
 fallocate -l 1G /swapfile >> $LOG_FILE 2>&1
 chmod 600 /swapfile >> $LOG_FILE 2>&1
 mkswap /swapfile >> $LOG_FILE 2>&1
@@ -88,11 +89,11 @@ echo $SEED > $SEED_FILE
 
 decho "Installing latest npm package manager for node..."
 retry 3 npm -g --unsafe-perm install npm@5  >> $LOG_FILE 2>&1
-NODE_MODULES=$(npm -g root)
-NPM_BIN=$(npm -g bin)
+NODE_MODULES=$(sudo npm -g root)
+NPM_BIN=$(sudo npm -g bin)
 
 decho "Installing lamassu-server..."
-retry 3 npm -g --unsafe-perm install lamassu/lamassu-server#v5 >> $LOG_FILE 2>&1
+retry 3 sudo npm -g --unsafe-perm install lamassu/lamassu-server#v5 >> $LOG_FILE 2>&1
 
 decho "Creating postgres user..."
 POSTGRES_PW=$(hkdf postgres-pw $SEED)
